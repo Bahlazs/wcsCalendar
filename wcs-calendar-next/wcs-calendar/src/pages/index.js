@@ -1,54 +1,62 @@
+// pages/index.js
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, CircularProgress, Alert, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 import dayjs from 'dayjs';
-import CalendarHeader from '../../components/CalendarHeader';
-import CalendarGrid from '../../components/CalendarGrid';
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+} from '@mui/material';
+import CalendarHeader from '../components/CalendarHeader.jsx';
 
-const filters = ['Minden', 'Buli', 'Óra', 'Táncóra'];
 
-export default function CalendarPage() {
+const CALENDARS = [
+  { id: 0, name: 'bulik' },
+  { id: 1, name: 'bemutató' },
+  { id: 2, name: 'extrahaladó/klub' },
+  { id: 3, name: 'haladó' },
+  { id: 4, name: 'kezdő' },
+  { id: 5, name: 'középhaladó' },
+  { id: 6, name: 'szintfüggetlen/styling' },
+  { id: 7, name: 'versenyző' },
+  { id: 8, name: 'workshop' },
+  { id: 9, name: 'workshop kezdő' },
+];
+
+const WEEK_DAYS = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
+
+const CalendarPage = () => {
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [selectedFilter, setSelectedFilter] = useState('Minden');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [selectedEventDate, setSelectedEventDate] = useState(null);
+  const [selectedCalendar, setSelectedCalendar] = useState(CALENDARS[0].id);
 
   useEffect(() => {
     const fetchEvents = async () => {
-      setLoading(true);
-      setError(null);
       try {
         const res = await fetch('/api/events');
-        if (!res.ok) throw new Error('Sikertelen lekérés');
         const data = await res.json();
         setEvents(data);
-      } catch (err) {
-        setError('Nem sikerült betölteni az eseményeket.');
-        console.error(err);
-      } finally {
-        setLoading(false);
+      } catch (error) {
+        console.error('Események betöltése sikertelen:', error);
       }
     };
 
     fetchEvents();
-  }, [currentDate]);
+  }, []);
 
-  const filteredEvents = events.filter(event => selectedFilter === 'Minden' || event.type === selectedFilter);
+  const filteredEvents = events.filter(event => {
+    const sameCalendar = event.id === selectedCalendar;
+    return sameCalendar;
+  });
 
-  const getEventsForDate = (date) => filteredEvents.filter(event => dayjs(event.start).isSame(date, 'day'));
-
-  const handleMonthChange = (offset) => setCurrentDate(currentDate.add(offset, 'month'));
-
-  const handleEventClick = (event, date) => {
-    setSelectedEvent(event);
-    setSelectedEventDate(date);
+  const getEventsForDate = (date) => {
+    return filteredEvents.filter(event => dayjs(event.start).isSame(date, 'day'));
   };
 
-  const handleCloseDialog = () => {
-    setSelectedEvent(null);
-    setSelectedEventDate(null);
+  const handleMonthChange = (offset) => {
+    setCurrentDate(prev => prev.add(offset, 'month'));
   };
 
   const generateCalendarDays = () => {
@@ -77,42 +85,50 @@ export default function CalendarPage() {
   };
 
   const calendarDays = generateCalendarDays();
-  const weekDays = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
+  
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom>Naptár</Typography>
+
       <CalendarHeader
         currentDate={currentDate}
         onMonthChange={handleMonthChange}
-        selectedFilter={selectedFilter}
-        setSelectedFilter={setSelectedFilter}
-        filters={filters}
+        calendars={CALENDARS}
+        selectedCalendar={selectedCalendar}
+        setSelectedCalendar={setSelectedCalendar}
       />
-      {loading && <CircularProgress sx={{ my: 4 }} />}
-      {error && <Alert severity="error">{error}</Alert>}
-      {!loading && !error && (
-        <CalendarGrid
-          weekDays={weekDays}
-          calendarDays={calendarDays}
-          getEventsForDate={getEventsForDate}
-          onEventClick={handleEventClick}
-        />
-      )}
 
-      <Dialog open={Boolean(selectedEvent)} onClose={handleCloseDialog}>
-        <DialogTitle>Esemény részletei</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <strong>Cím:</strong> {selectedEvent?.title}<br />
-            <strong>Típus:</strong> {selectedEvent?.type}<br />
-            <strong>Dátum:</strong> {selectedEventDate?.format('YYYY-MM-DD')}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Bezárás</Button>
-        </DialogActions>
-      </Dialog>
+      <Grid container columns={7} spacing={2}>
+        {WEEK_DAYS.map((day, i) => (
+          <Grid size={1} key={i}>
+            <Typography align="center" fontWeight="bold">{day}</Typography>
+          </Grid>
+        ))}
+
+        {calendarDays.map(({ date, current }, idx) => (
+          <Grid size={1} key={idx}>
+            <Card sx={{ backgroundColor: current ? 'white' : '#f0f0f0', minHeight: 120, display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ p: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <Box display="flex" justifyContent="flex-end">
+                  <Typography variant="caption" color="textSecondary">{date.date()}</Typography>
+                </Box>
+                {current && (
+                  <Box sx={{ overflowY: 'auto', mt: 1, flexGrow: 1 }}>
+                    {getEventsForDate(date).map((event, index) => (
+                      <Typography key={index} variant="body2" noWrap>
+                        {event.title}
+                      </Typography>
+                    ))}
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
-}
+};
+
+export default CalendarPage;
