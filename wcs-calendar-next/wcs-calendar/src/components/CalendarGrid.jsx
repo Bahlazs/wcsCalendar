@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Card, CardContent, Box } from '@mui/material';
+import Event from './Event';
 
 const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate }) => (
   <Grid container columns={7} spacing={2}>
@@ -23,9 +24,7 @@ const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate }) => (
             {current && (
               <Box sx={{ overflowY: 'auto', mt: 1, flexGrow: 1 }}>
                 {getEventsForDate(date).map((event, index) => (
-                  <Typography key={index} variant="body2" noWrap>
-                    {event.title}
-                  </Typography>
+                  <Event key={index} name={event.title} color={'black'} textColor={'white'}/>
                 ))}
               </Box>
             )}
