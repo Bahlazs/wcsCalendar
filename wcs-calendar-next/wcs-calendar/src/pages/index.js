@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import {
   Container,
-  Grid,
-  Card,
-  CardContent,
   Typography,
   Box,
+  Backdrop,
+  CircularProgress,
+  Fade
 } from '@mui/material';
 import CalendarHeader from '../components/CalendarHeader.jsx';
 import CalendarGrid from '@/components/CalendarGrid.jsx';
@@ -32,6 +32,7 @@ const CalendarPage = () => {
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedCalendar, setSelectedCalendar] = useState(CALENDARS[0].id);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -41,6 +42,8 @@ const CalendarPage = () => {
         setEvents(data);
       } catch (error) {
         console.error('Események betöltése sikertelen:', error);
+      } finally {
+      setLoading(false);
       }
     };
 
@@ -100,7 +103,29 @@ const CalendarPage = () => {
         setSelectedCalendar={setSelectedCalendar}
       />
 
-      <CalendarGrid weekDays={WEEK_DAYS} calendarDays={calendarDays} getEventsForDate={getEventsForDate}/>
+    <Fade in={!loading} timeout={500}>
+    <Box>
+      <CalendarGrid
+        weekDays={WEEK_DAYS}
+        calendarDays={calendarDays}
+        getEventsForDate={getEventsForDate}
+      />
+    </Box>
+  </Fade>
+
+  <Fade in={loading} timeout={500} unmountOnExit>
+    <Backdrop
+      open
+      sx={{
+        position: 'absolute',
+        zIndex: 10,
+        color: '#fff',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)'
+      }}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  </Fade>
     </Container>
   );
 };
