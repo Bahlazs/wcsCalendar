@@ -26,12 +26,25 @@ const CALENDARS = [
   { id: 9, name: 'workshop kezdő' },
 ];
 
+const COLORS = [
+  { id: 0, color: '#3f51b5' },
+  { id: 1, color: '#9c27b0' },
+  { id: 2, color: '#4caf50' },
+  { id: 3, color: '#388e3c' },
+  { id: 4, color: '#cddc39' },
+  { id: 5, color: '#8bc34a' },
+  { id: 6, color: '#D23C77' },
+  { id: 7, color: '#f44336' },
+  { id: 8, color: '#ff9800' },
+  { id: 9, color: '#ffb74d' },
+];
+
 const WEEK_DAYS = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
 
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [selectedCalendar, setSelectedCalendar] = useState(CALENDARS[0].id);
+  const [selectedCalendars, setSelectedCalendars] = useState([CALENDARS[0].id]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,14 +63,16 @@ const CalendarPage = () => {
     fetchEvents();
   }, []);
 
-  const filteredEvents = events.filter(event => {
-    const sameCalendar = event.id === selectedCalendar;
-    return sameCalendar;
-  });
+  const filteredEvents = events.filter(event => selectedCalendars.includes(event.id));
 
   const getEventsForDate = (date) => {
     return filteredEvents.filter(event => dayjs(event.start).isSame(date, 'day'));
   };
+
+  const getColorForId = (id) => {
+  const found = COLORS.find(item => item.id === id);
+  return found ? found.color : '#000'; 
+};
 
   const handleMonthChange = (offset) => {
     setCurrentDate(prev => prev.add(offset, 'month'));
@@ -99,8 +114,8 @@ const CalendarPage = () => {
         currentDate={currentDate}
         onMonthChange={handleMonthChange}
         calendars={CALENDARS}
-        selectedCalendar={selectedCalendar}
-        setSelectedCalendar={setSelectedCalendar}
+        selectedCalendars={selectedCalendars}
+        setSelectedCalendars={setSelectedCalendars}
       />
 
     <Fade in={!loading} timeout={500}>
@@ -109,6 +124,7 @@ const CalendarPage = () => {
         weekDays={WEEK_DAYS}
         calendarDays={calendarDays}
         getEventsForDate={getEventsForDate}
+        getColorForEvent={getColorForId}
       />
     </Box>
   </Fade>
@@ -123,7 +139,7 @@ const CalendarPage = () => {
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
       }}
     >
-      <CircularProgress color="inherit" />
+      <CircularProgress color="primary" />
     </Backdrop>
   </Fade>
     </Container>

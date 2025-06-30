@@ -14,8 +14,8 @@ const CalendarHeader = ({
   currentDate,
   onMonthChange,
   calendars,
-  selectedCalendar,
-  setSelectedCalendar,
+  selectedCalendars,
+  setSelectedCalendars,
 }) => {
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4} spacing={2}>
@@ -28,12 +28,30 @@ const CalendarHeader = ({
         <FormControl variant="outlined" size="small">
           <InputLabel>Naptár</InputLabel>
           <Select
-            value={selectedCalendar}
-            onChange={(e) => setSelectedCalendar(e.target.value)}
-            label="Naptár"
-          >
+              multiple
+              value={selectedCalendars}
+              sx={{ width: 200 }}
+              onChange={(e) => setSelectedCalendars(e.target.value)}
+              label="Naptár"
+              renderValue={(selected) =>
+                calendars
+                  .filter((cal) => selected.includes(cal.id))
+                  .map((cal) => cal.name)
+                  .join(', ')
+              }
+>
             {calendars.map((calendar) => (
-              <MenuItem key={calendar.id} value={calendar.id}>
+              <MenuItem key={calendar.id} 
+                        value={calendar.id}  
+                        sx={{
+                            '&.Mui-selected': {
+                              backgroundColor: 'primary.dark',
+                              color: 'white',
+                            },
+                            '&.Mui-selected:hover': {
+                              backgroundColor: 'primary.main',
+                            },
+                          }}>
                 {calendar.name}
               </MenuItem>
             ))}

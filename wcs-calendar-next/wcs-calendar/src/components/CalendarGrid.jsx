@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography, Card, CardContent, Box } from '@mui/material';
 import Event from './Event';
 
-const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate }) => (
+const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEvent }) => (
   <Grid container columns={7} spacing={2}>
     {weekDays.map((day, i) => (
       <Grid size={1} key={i}>
@@ -14,17 +14,17 @@ const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate }) => (
 
     {calendarDays.map(({ date, current }, idx) => (
       <Grid size={1} key={idx}>
-        <Card sx={{ backgroundColor: current ? 'white' : '#f0f0f0', minHeight: 120, display: 'flex', flexDirection: 'column' }}>
-          <CardContent sx={{ p: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Card sx={{ backgroundColor: current ? 'white' : '#f0f0f0', minHeight: 120, display: 'flex', flexDirection: 'column'}}>
+          <CardContent sx={{ p: 1, display: 'flex', flexDirection: 'column', height: '100%'}}>
             <Box display="flex" justifyContent="flex-end">
               <Typography variant="caption" color="textSecondary">
                 {date.date()}
               </Typography>
             </Box>
             {current && (
-              <Box sx={{ overflowY: 'auto', mt: 1, flexGrow: 1 }}>
+              <Box display='flex' gap='2px' flexDirection='column' sx={{ overflowY: 'auto', mt: 1, flexGrow: 1 }}>
                 {getEventsForDate(date).map((event, index) => (
-                  <Event key={index} name={event.title} color={'black'} textColor={'white'}/>
+                  <Event key={index} name={event.title} color={getColorForEvent(event.id)} textColor={'white'}/>
                 ))}
               </Box>
             )}
