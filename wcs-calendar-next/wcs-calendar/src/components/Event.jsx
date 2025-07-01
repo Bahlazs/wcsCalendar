@@ -29,8 +29,6 @@ const Event = ({ name, color, textColor }) => {
       arrow
       placement="top"
       disableInteractive
-      enterDelay={300}
-      leaveDelay={150}
       slotProps={{
         tooltip: {
           sx: {
