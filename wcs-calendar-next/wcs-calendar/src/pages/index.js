@@ -66,8 +66,26 @@ const CalendarPage = () => {
   const filteredEvents = events.filter(event => selectedCalendars.includes(event.id));
 
   const getEventsForDate = (date) => {
-    return filteredEvents.filter(event => dayjs(event.start).isSame(date, 'day'));
-  };
+  return filteredEvents.filter(event => {
+    const start = dayjs(event.start);
+    const end = dayjs(event.end);
+
+    if (!end.isValid()) {
+      return start.isSame(date, 'day');
+    }
+
+    const isAfterStart = date.isSame(start, 'day') || date.isAfter(start, 'day');
+    let isBeforeEnd;
+
+    if (date.isSame(end, 'day')) {
+      isBeforeEnd = end.hour() >= 6;
+    } else {
+      isBeforeEnd = date.isBefore(end, 'day');
+    }
+
+    return isAfterStart && isBeforeEnd;
+  });
+};
 
   const getColorForId = (id) => {
   const found = COLORS.find(item => item.id === id);

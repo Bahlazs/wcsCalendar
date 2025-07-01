@@ -44,6 +44,7 @@ export default async function handler(req, res) {
           id: innerID,
           title: event.summary || 'event',
           start: event.start?.dateTime || event.start?.date,
+          end: event.end?.dateTime || event.end?.date,
           type: event.description || 'wcs event',
         }));
 
