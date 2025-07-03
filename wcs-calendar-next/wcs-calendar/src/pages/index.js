@@ -143,6 +143,7 @@ const CalendarPage = () => {
         calendarDays={calendarDays}
         getEventsForDate={getEventsForDate}
         getColorForEvent={getColorForId}
+        today= {dayjs()}
       />
     </Box>
   </Fade>

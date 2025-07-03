@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography, Card, CardContent, Box } from '@mui/material';
 import Event from './Event';
 
-const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEvent }) => (
+const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEvent, today }) => (
   <Grid container columns={7} spacing={2}>
     {weekDays.map((day, i) => (
       <Grid size={1} key={i}>
@@ -14,7 +14,16 @@ const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEve
 
     {calendarDays.map(({ date, current }, idx) => (
       <Grid size={1} key={idx}>
-        <Card sx={{ backgroundColor: current ? 'white' : '#f0f0f0', minHeight: 120, display: 'flex', flexDirection: 'column'}}>
+        <Card sx={{
+                backgroundColor: !current
+                  ? '#f0f0f0'
+                  : date.isSame(today, 'day')
+                    ? '#e0f7fa'
+                    : 'white',
+                minHeight: 120,
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
           <CardContent sx={{ p: 1, display: 'flex', flexDirection: 'column', height: '100%'}}>
             <Box display="flex" justifyContent="flex-end">
               <Typography variant="caption" color="textSecondary">
