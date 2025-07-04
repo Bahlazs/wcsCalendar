@@ -51,6 +51,7 @@ const Event = ({ name, color, textColor }) => {
     >
       <Box
         bgcolor={color}
+        minHeight={30}
         sx={{
           p: 0.5,
           borderRadius: 1,
