@@ -71,7 +71,7 @@ const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEve
                 }}
               >
                 {eventsForDate.map((event, index) => (
-                  <Event key={index} name={event.title} color={getColorForEvent(event.id)} textColor={'white'}/>
+                  <Event key={index} event={event} color={getColorForEvent(event.id)} textColor={'white'}/>
                 ))}
               </Box>
             )}
