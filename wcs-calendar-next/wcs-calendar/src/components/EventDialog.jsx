@@ -38,6 +38,10 @@ const EventDialog = ({event, open, handleClose}) => {
             {event.end ? ` - ${dayjs(event.end).format('HH:mm')}` : ''}
           </Typography>
 
+          <Typography variant="body2" color="textSecondary">
+            <strong>Helyszín:</strong> {event.location || 'Nincs megadva'}
+          </Typography>
+
           <Divider />
 
           {hasHTML(event.type) ? (

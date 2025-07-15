@@ -48,6 +48,7 @@ async function fetchEventsFromGoogle() {
         start: event.start?.dateTime || event.start?.date,
         end: event.end?.dateTime || event.end?.date,
         type: event.description || 'wcs event',
+        location: event.location || ' - ',
       }));
 
       allEvents.push(...events);
