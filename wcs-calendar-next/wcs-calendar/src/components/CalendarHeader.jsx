@@ -5,6 +5,9 @@ import {
   Typography,
   Stack
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 
 const CalendarHeader = ({
   currentDate,
@@ -23,10 +26,14 @@ const CalendarHeader = ({
 
   return (
     <Stack spacing={2} mb={4}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Button onClick={() => onMonthChange(-1)}>Előző hónap</Button>
+      <Stack direction="row" justifyContent="space-around" alignItems="center">
+        <Button onClick={() => onMonthChange(-1)}>
+          <ArrowBackIcon fontSize="large" />
+        </Button>
         <Typography variant="h6">{currentDate.format('YYYY. MMMM')}</Typography>
-        <Button onClick={() => onMonthChange(1)}>Következő hónap</Button>
+        <Button onClick={() => onMonthChange(1)}>
+          <ArrowForwardIcon fontSize="large" />
+        </Button>
       </Stack>
 
       <Box
