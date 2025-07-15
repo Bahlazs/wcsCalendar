@@ -65,8 +65,8 @@ const CalendarPage = () => {
 
   const filteredEvents = events.filter(event => selectedCalendars.includes(event.id));
 
-  const getEventsForDate = (date) => {
-  return filteredEvents.filter(event => {
+const getEventsForDate = (date) => {
+  const eventsForDate = filteredEvents.filter(event => {
     const start = dayjs(event.start);
     const end = dayjs(event.end);
 
@@ -85,7 +85,11 @@ const CalendarPage = () => {
 
     return isAfterStart && isBeforeEnd;
   });
+
+  // ⬇️ Itt rendezés start időpont szerint
+  return eventsForDate.sort((a, b) => dayjs(a.start).valueOf() - dayjs(b.start).valueOf());
 };
+
 
   const getColorForId = (id) => {
   const found = COLORS.find(item => item.id === id);
