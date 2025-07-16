@@ -1,6 +1,8 @@
 // pages/index.js
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import {
   Container,
   Typography,
@@ -40,6 +42,9 @@ const COLORS = [
 ];
 
 const WEEK_DAYS = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
+
+dayjs.extend(utc);
+dayjs.extend(timezone)
 
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
@@ -147,7 +152,7 @@ const getEventsForDate = (date) => {
         calendarDays={calendarDays}
         getEventsForDate={getEventsForDate}
         getColorForEvent={getColorForId}
-        today= {dayjs()}
+        today= {dayjs().tz('Europe/Budapest')}
       />
     </Box>
   </Fade>
