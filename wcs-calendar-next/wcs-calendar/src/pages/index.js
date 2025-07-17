@@ -52,6 +52,8 @@ const CalendarPage = () => {
   const [selectedCalendars, setSelectedCalendars] = useState([CALENDARS[0].id]);
   const [loading, setLoading] = useState(true);
 
+  console.log(dayjs().tz('Europe/Budapest'))
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
