@@ -57,7 +57,7 @@ async function fetchEventsFromGoogle() {
       console.error(`Nem sikerült lekérni a naptárat: ${calendarId}`, innerError);
     }
   }
-
+  console.log(allEvents)
   return allEvents;
 }
 
@@ -78,6 +78,7 @@ export default async function handler(req, res) {
     lastFetchTime = now;
 
     res.status(200).json(freshData);
+    console.log('events fetched')
   } catch (error) {
     console.error('API hiba:', error);
     res.status(500).json({ error: 'Események lekérése sikertelen.' });

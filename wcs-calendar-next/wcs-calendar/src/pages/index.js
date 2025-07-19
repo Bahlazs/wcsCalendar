@@ -43,14 +43,14 @@ const COLORS = [
 
 const WEEK_DAYS = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
 
-dayjs.extend(utc);
-dayjs.extend(timezone)
-
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedCalendars, setSelectedCalendars] = useState([CALENDARS[0].id]);
   const [loading, setLoading] = useState(true);
+
+  dayjs.extend(utc);
+  dayjs.extend(timezone)
 
   console.log(dayjs().tz('Europe/Budapest'))
 
