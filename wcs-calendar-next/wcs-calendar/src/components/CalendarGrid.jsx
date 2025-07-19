@@ -11,6 +11,7 @@ const isTouchDevice = () => {
 
 const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEvent, today }) => {
   const isTooNarrow = useMediaQuery('(max-width: 900px)');
+  console.log(isTouchDevice())
 
   return (
     <>
