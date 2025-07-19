@@ -33,7 +33,7 @@ async function fetchEventsFromGoogle() {
 
 
 
-  const timeMin = now.subtract(6, 'month').toISOString();
+  const timeMin = now.subtract(3, 'month').toISOString();
   const timeMax = now.add(6, 'month').toISOString();
 
 

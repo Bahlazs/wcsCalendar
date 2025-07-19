@@ -105,7 +105,7 @@ const CalendarPage = () => {
 
   const handleMonthChange = (offset) => {
     const newDate = currentDate.add(offset, 'month');
-    const minDate = dayjs().subtract(6, 'month').startOf('month');
+    const minDate = dayjs().subtract(2, 'month').startOf('month');
     const maxDate = dayjs().add(6, 'month').startOf('month');
 
     if (newDate.isBefore(minDate) || newDate.isAfter(maxDate)) return;
@@ -113,7 +113,7 @@ const CalendarPage = () => {
     setCurrentDate(newDate);
   };
 
-  const minReached = currentDate.isSameOrBefore(dayjs().subtract(6, 'month'), 'month');
+  const minReached = currentDate.isSameOrBefore(dayjs().subtract(2, 'month'), 'month');
   const maxReached = currentDate.isSameOrAfter(dayjs().add(6, 'month'), 'month');
 
   const generateCalendarDays = () => {
