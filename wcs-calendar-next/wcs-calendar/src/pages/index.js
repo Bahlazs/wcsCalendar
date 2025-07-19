@@ -145,7 +145,6 @@ const CalendarPage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>Naptár</Typography>
 
       <CalendarHeader
         currentDate={currentDate}
