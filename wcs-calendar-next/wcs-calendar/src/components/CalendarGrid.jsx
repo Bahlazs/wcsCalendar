@@ -10,9 +10,10 @@ const isTouchDevice = () => {
 };
 
 const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEvent, today }) => {
-  const isTooNarrow = useMediaQuery('(orientation : portrait)');
+  const isPortrait = useMediaQuery('(orientation : portrait)');
+  const shouldHideGrid = isPortrait && isTouchDevice() 
 
-  if (isTooNarrow) {
+  if (shouldHideGrid) {
     return (
       <Box textAlign="center" mt={4}>
         <Typography variant="h6">
