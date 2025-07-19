@@ -8,13 +8,14 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-
 const CalendarHeader = ({
   currentDate,
   onMonthChange,
   calendars,
   selectedCalendars,
   setSelectedCalendars,
+  disablePrev,
+  disableNext,
 }) => {
   const toggleCalendar = (id) => {
     if (selectedCalendars.includes(id)) {
@@ -27,11 +28,11 @@ const CalendarHeader = ({
   return (
     <Stack spacing={2} mb={4}>
       <Stack direction="row" justifyContent="space-around" alignItems="center">
-        <Button onClick={() => onMonthChange(-1)}>
+        <Button onClick={() => onMonthChange(-1)} disabled={disablePrev}>
           <ArrowBackIcon fontSize="large" />
         </Button>
         <Typography variant="h6">{currentDate.format('YYYY. MMMM')}</Typography>
-        <Button onClick={() => onMonthChange(1)}>
+        <Button onClick={() => onMonthChange(1)} disabled={disableNext}>
           <ArrowForwardIcon fontSize="large" />
         </Button>
       </Stack>
@@ -66,3 +67,4 @@ const CalendarHeader = ({
 };
 
 export default CalendarHeader;
+

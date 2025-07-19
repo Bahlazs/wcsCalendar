@@ -1,11 +1,17 @@
 // pages/api/events.js
 import { google } from 'googleapis';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 // Egyszerű memóriacache - ez *újraindításkor* elveszik, de Vercelen pl. jól működik
 let cachedData = null;
 let lastFetchTime = 0;
 const CACHE_DURATION_MS = 30 * 60 * 1000; // 30 perc
+
+dayjs.extend(utc);
+dayjs.extend(timezone)
+const now = dayjs()
 
 async function fetchEventsFromGoogle() {
   const { GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, CALENDAR_IDS } = process.env;
@@ -25,14 +31,19 @@ async function fetchEventsFromGoogle() {
   const authClient = await auth.getClient();
   const calendar = google.calendar({ version: 'v3', auth: authClient });
 
-  const now = dayjs();
-  const timeMin = now.startOf('year').toISOString();
-  const timeMax = now.endOf('year').toISOString();
+
+
+  const timeMin = now.subtract(6, 'month').toISOString();
+  const timeMax = now.add(6, 'month').toISOString();
+
 
   let allEvents = [];
   let innerID = 0;
 
-  for (const calendarId of calendarIds) {
+ for (const calendarId of calendarIds) {
+  let pageToken = null;
+
+  do {
     try {
       const response = await calendar.events.list({
         calendarId,
@@ -40,6 +51,8 @@ async function fetchEventsFromGoogle() {
         timeMax,
         singleEvents: true,
         orderBy: 'startTime',
+        maxResults: 500,
+        pageToken,
       });
 
       const events = (response.data.items || []).map(event => ({
@@ -52,18 +65,22 @@ async function fetchEventsFromGoogle() {
       }));
 
       allEvents.push(...events);
-      innerID++;
+      pageToken = response.data.nextPageToken; // <-- következő lap
+
     } catch (innerError) {
       console.error(`Nem sikerült lekérni a naptárat: ${calendarId}`, innerError);
+      break; // Ha hiba van, kilépünk az adott naptárból
     }
-  }
-  console.log(allEvents)
+  } while (pageToken); // Addig ismételjük, amíg van következő oldal
+
+  innerID++;
+}
+
   return allEvents;
 }
 
 export default async function handler(req, res) {
   try {
-    const now = Date.now();
 
     if (cachedData && (now - lastFetchTime) < CACHE_DURATION_MS) {
       console.log('Serving cached events');
