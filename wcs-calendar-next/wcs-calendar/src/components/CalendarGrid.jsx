@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Card, CardContent, Box, useMediaQuery, useTheme } from '@mui/material';
+import { Grid, Typography, Card, CardContent, Box, useMediaQuery } from '@mui/material';
 import Event from './Event';
 
 const isTouchDevice = () => {
@@ -10,8 +10,7 @@ const isTouchDevice = () => {
 };
 
 const CalendarGrid = ({ weekDays, calendarDays, getEventsForDate, getColorForEvent, today }) => {
-  const theme = useTheme();
-  const isTooNarrow = useMediaQuery('(max-width:700px)');
+  const isTooNarrow = useMediaQuery('(orientation : portrait)');
 
   if (isTooNarrow) {
     return (
