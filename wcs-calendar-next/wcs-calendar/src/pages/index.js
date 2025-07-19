@@ -53,7 +53,7 @@ const CalendarPage = () => {
 
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [selectedCalendars, setSelectedCalendars] = useState([CALENDARS[3].id, CALENDARS[4].id]);
+  const [selectedCalendars, setSelectedCalendars] = useState([CALENDARS[0].id]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
